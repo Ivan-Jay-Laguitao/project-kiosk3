@@ -23,6 +23,7 @@ function DeanLogin({ onLogin, onBack }) {
     setIsLoading(true)
 
     // ===== PHP BACKEND FETCH: Dean authentication =====
+    // const submitData = { deanId, password, department }
     // try {
     //   const response = await fetch('backend/dean_login.php', {
     //     method: 'POST',

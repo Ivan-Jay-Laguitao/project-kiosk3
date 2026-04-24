@@ -47,6 +47,29 @@ function Login({ onLogin, onAdminClick, onDeanClick }) {
   // === Mock login handler for demonstration ===
   const handleSubmit = (e) => {
     e.preventDefault()
+    
+    // ===== PHP BACKEND FETCH: Student authentication =====
+    // try {
+    //   const response = await fetch('backend/student_login.php', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ studentId: idNumber, password })
+    //   })
+    //   const data = await response.json()
+    //   if (data.success) {
+    //     onLogin({
+    //       name: data.student.name,
+    //       id: idNumber,
+    //       role: 'student',
+    //       department: data.student.department,
+    //       token: data.token
+    //     })
+    //   }
+    // } catch (error) {
+    //   console.error('Login error:', error)
+    // }
+    // ===== END BACKEND FETCH =====
+    
     // Simulate login - in real app, validate against backend
     if (idNumber && password) {
       onLogin({

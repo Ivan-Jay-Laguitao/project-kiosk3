@@ -40,9 +40,9 @@ function AdminFacilityReports() {
   ])
 
   const handleStatusChange = (reportId, newStatus) => {
-    // ===== PHP BACKEND FETCH: Update facility report status =====
+    // ===== PHP BACKEND FETCH: Update facility report status in database =====
     // try {
-    //   await fetch('backend/update_facility_status.php', {
+    //   const response = await fetch('backend/update_facility_status.php', {
     //     method: 'POST',
     //     headers: { 'Content-Type': 'application/json' },
     //     body: JSON.stringify({ reportId, status: newStatus })

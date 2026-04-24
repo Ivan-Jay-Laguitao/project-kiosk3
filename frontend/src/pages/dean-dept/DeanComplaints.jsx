@@ -24,6 +24,23 @@ function DeanComplaints({ department }) {
   const [selectedComplaint, setSelectedComplaint] = useState(null)
 
   const handleStatusChange = (complaintId, newStatus) => {
+    // ===== PHP BACKEND FETCH: Update complaint status in database =====
+    // try {
+    //   const response = await fetch('backend/update_complaint_status.php', {
+    //     method: 'POST',
+    //     headers: { 'Content-Type': 'application/json' },
+    //     body: JSON.stringify({ complaintId, status: newStatus })
+    //   })
+    //   const result = await response.json()
+    //   if (!result.success) {
+    //     console.error('Failed to update complaint status')
+    //     return
+    //   }
+    // } catch (error) {
+    //   console.error('Update error:', error)
+    // }
+    // ===== END BACKEND FETCH =====
+    
     setComplaints(prev => prev.map(complaint =>
       complaint.id === complaintId
         ? { ...complaint, status: newStatus }

@@ -1,7 +1,7 @@
 import { useState } from 'react'
 //const [complaints, setComplaints] = useState([
 function DeanComplaints({ department }) {
-  const [complaints] = useState([
+  const [complaints, setComplaints] = useState([
     {
       id: 'CMP-20250425-010',
       student: 'Juan Dela Cruz',
@@ -21,6 +21,27 @@ function DeanComplaints({ department }) {
       description: 'Property damage in laboratory'
     }
   ])
+  const [selectedComplaint, setSelectedComplaint] = useState(null)
+
+  const handleStatusChange = (complaintId, newStatus) => {
+    setComplaints(prev => prev.map(complaint =>
+      complaint.id === complaintId
+        ? { ...complaint, status: newStatus }
+        : complaint
+    ))
+
+    if (selectedComplaint?.id === complaintId) {
+      setSelectedComplaint(prev => prev ? { ...prev, status: newStatus } : prev)
+    }
+  }
+
+  const openReview = (complaint) => {
+    setSelectedComplaint(complaint)
+  }
+
+  const closeReview = () => {
+    setSelectedComplaint(null)
+  }
 
   return (
     <div className="admin-complaints">
@@ -60,8 +81,52 @@ function DeanComplaints({ department }) {
                 <td>{complaint.date}</td>
                 <td>
                   <div className="action-buttons">
-                    <button className="action-btn view-btn">👁️ Review</button>
-                    <button className="action-btn">✏️ Update</button>
+                    <button
+                      className="action-btn view-btn"
+                      onClick={() => openReview(complaint)}
+                    >
+                      👁️ Review
+                    </button>
+                    {complaint.status === 'pending' && (
+                      <>
+                        <button
+                          className="action-btn"
+                          onClick={() => handleStatusChange(complaint.id, 'reviewed')}
+                        >
+                          ✅ Reviewed
+                        </button>
+                        <button
+                          className="action-btn"
+                          onClick={() => handleStatusChange(complaint.id, 'rejected')}
+                        >
+                          ❌ Rejected
+                        </button>
+                      </>
+                    )}
+                    {complaint.status === 'reviewed' && (
+                      <>
+                        <button
+                          className="action-btn"
+                          onClick={() => handleStatusChange(complaint.id, 'resolved')}
+                        >
+                          ✅ Resolve
+                        </button>
+                        <button
+                          className="action-btn"
+                          onClick={() => handleStatusChange(complaint.id, 'rejected')}
+                        >
+                          ❌ Reject
+                        </button>
+                      </>
+                    )}
+                    {complaint.status === 'rejected' && (
+                      <button
+                        className="action-btn"
+                        onClick={() => handleStatusChange(complaint.id, 'reviewed')}
+                      >
+                        🔄 Reopen
+                      </button>
+                    )}
                   </div>
                 </td>
               </tr>
@@ -69,6 +134,35 @@ function DeanComplaints({ department }) {
           </tbody>
         </table>
       </div>
+
+      {selectedComplaint && (
+        <div className="review-overlay" onClick={closeReview}>
+          <div className="review-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>📝 Complaint Details</h3>
+            <div className="review-grid">
+              <div className="review-label">Reference No.</div>
+              <div className="review-value">{selectedComplaint.id}</div>
+              <div className="review-label">Student</div>
+              <div className="review-value">{selectedComplaint.student}</div>
+              <div className="review-label">Category</div>
+              <div className="review-value">{selectedComplaint.category}</div>
+              <div className="review-label">Sub-category</div>
+              <div className="review-value">{selectedComplaint.subCategory}</div>
+              <div className="review-label">Status</div>
+              <div className="review-value">{selectedComplaint.status}</div>
+              <div className="review-label">Date</div>
+              <div className="review-value">{selectedComplaint.date}</div>
+              <div className="review-label">Description</div>
+              <div className="review-value">{selectedComplaint.description}</div>
+            </div>
+            <div style={{ textAlign: 'right' }}>
+              <button className="btn-secondary" onClick={closeReview}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

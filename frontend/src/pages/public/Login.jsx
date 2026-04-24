@@ -1,11 +1,3 @@
-import { useState } from 'react'
-import msuiitLogo from '../assets/msuiit-logo.png'
-
-function Login({ onLogin }) {
-  const [role, setRole] = useState('student')
-  const [idNumber, setIdNumber] = useState('')
-  const [password, setPassword] = useState('')
-
 //   const handleSubmit = async (e) => {
 //   e.preventDefault()
 //   setError('')
@@ -42,7 +34,17 @@ function Login({ onLogin }) {
 //   setIsLoading(false)
 // }
 
-//  === Mock login handler for demonstration (replace with actual backend authentication) ===
+
+import { useState } from 'react'
+import msuiitLogo from '../../assets/msuiit-logo.png'
+
+function Login({ onLogin, onAdminClick, onDeanClick }) {
+  const [role, setRole] = useState('student')
+  const [idNumber, setIdNumber] = useState('')
+  const [password, setPassword] = useState('')
+  const [showAdminModal, setShowAdminModal] = useState(false)
+
+  // === Mock login handler for demonstration ===
   const handleSubmit = (e) => {
     e.preventDefault()
     // Simulate login - in real app, validate against backend
@@ -55,13 +57,33 @@ function Login({ onLogin }) {
       })
     }
   }
-// === END Mock login handler ===
+  // === END Mock login handler ===
+
+  const handleLogoClick = () => {
+    setShowAdminModal(true)
+  }
 
   return (
     <div className="login-container">
       <div className="login-header">
-        <div className="login-logo">
+        <div 
+          className="login-logo" 
+          onClick={handleLogoClick}
+          style={{ cursor: 'pointer', position: 'relative' }}
+          title="Click for Administrative Access"
+        >
           <img src={msuiitLogo} alt="MSU-IIT Logo" />
+          <div style={{
+            position: 'absolute',
+            bottom: '-5px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            fontSize: '10px',
+            color: '#999',
+            whiteSpace: 'nowrap'
+          }}>
+            🔒 Admin Access
+          </div>
         </div>
         <h1>MSU-IIT Service Kiosk</h1>
         <p>Your One-Stop Hub for Campus Reports</p>
@@ -128,6 +150,66 @@ function Login({ onLogin }) {
           <p>🆘 National Emergency: 911</p>
         </div>
       </form>
+
+      {/* ===== ADMIN/DEAN ACCESS MODAL ===== */}
+      {showAdminModal && (
+        <div className="review-overlay" onClick={() => setShowAdminModal(false)}>
+          <div className="review-modal" onClick={(e) => e.stopPropagation()}>
+            <div style={{ textAlign: 'center' }}>
+              <h3 style={{ color: '#4a0e0e', marginBottom: '10px' }}>
+                🔐 Administrative Access
+              </h3>
+              <p style={{ color: '#666', marginBottom: '25px' }}>
+                Select your administrative role to continue
+              </p>
+              
+              <div style={{ display: 'flex', gap: '15px', flexDirection: 'column' }}>
+                <button 
+                  onClick={() => {
+                    setShowAdminModal(false)
+                    onAdminClick()
+                  }}
+                  className="submit-btn"
+                  style={{ 
+                    background: 'linear-gradient(135deg, #1a237e 0%, #283593 100%)',
+                    fontSize: '16px'
+                  }}
+                >
+                  🛡️ Admin Dashboard
+                  <span style={{ display: 'block', fontSize: '12px', opacity: 0.8, marginTop: '4px' }}>
+                    System Administration & Oversight
+                  </span>
+                </button>
+                
+                <button 
+                  onClick={() => {
+                    setShowAdminModal(false)
+                    onDeanClick()
+                  }}
+                  className="submit-btn"
+                  style={{ 
+                    background: 'linear-gradient(135deg, #004d40 0%, #00695c 100%)',
+                    fontSize: '16px'
+                  }}
+                >
+                  📚 Dean's Dashboard
+                  <span style={{ display: 'block', fontSize: '12px', opacity: 0.8, marginTop: '4px' }}>
+                    College/Department Management
+                  </span>
+                </button>
+              </div>
+
+              <button 
+                onClick={() => setShowAdminModal(false)}
+                className="btn-secondary"
+                style={{ marginTop: '20px', width: '100%' }}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

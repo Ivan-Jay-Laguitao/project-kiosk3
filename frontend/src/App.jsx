@@ -1,28 +1,83 @@
 import { useState } from 'react'
-import Login from './ui/Login'
-import StudentDashboard from './ui/StudentDashboard'
+import Login from './pages/public/Login'
+import StudentDashboard from './pages/public/StudentDashboard'
+import AdminLogin from './pages/admin/AdminLogin'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import DeanLogin from './pages/dean-dept/DeanLogin'
+import DeanDashboard from './pages/dean-dept/DeanDashboard'
 import './styles/app.css'
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [currentView, setCurrentView] = useState('login') // 'login', 'student', 'admin-login', 'admin', 'dean-login', 'dean'
   const [user, setUser] = useState(null)
 
   const handleLogin = (userData) => {
     setUser(userData)
-    setIsLoggedIn(true)
+    setCurrentView('student')
+  }
+
+  const handleAdminLogin = (adminData) => {
+    setUser(adminData)
+    setCurrentView('admin')
+  }
+
+  const handleDeanLogin = (deanData) => {
+    setUser(deanData)
+    setCurrentView('dean')
   }
 
   const handleLogout = () => {
-    setIsLoggedIn(false)
     setUser(null)
+    setCurrentView('login')
+  }
+
+  const navigateTo = (view) => {
+    setCurrentView(view)
   }
 
   return (
     <div className="app">
-      {!isLoggedIn ? (
-        <Login onLogin={handleLogin} />
-      ) : (
-        <StudentDashboard user={user} onLogout={handleLogout} />
+      {currentView === 'login' && (
+        <Login 
+          onLogin={handleLogin} 
+          onAdminClick={() => navigateTo('admin-login')}
+          onDeanClick={() => navigateTo('dean-login')}
+        />
+      )}
+      
+      {currentView === 'student' && (
+        <StudentDashboard 
+          user={user} 
+          onLogout={handleLogout} 
+        />
+      )}
+      
+      {currentView === 'admin-login' && (
+        <AdminLogin 
+          onLogin={handleAdminLogin}
+          onBack={() => navigateTo('login')}
+        />
+      )}
+      
+      {currentView === 'admin' && (
+        <AdminDashboard 
+          user={user} 
+          onLogout={handleLogout}
+        />
+      )}
+      
+      {currentView === 'dean-login' && (
+        <DeanLogin 
+          onLogin={handleDeanLogin}
+          onBack={() => navigateTo('login')}
+        />
+      )}
+      
+      {currentView === 'dean' && (
+        <DeanDashboard 
+          user={user} 
+          onLogout={handleLogout}
+        />
       )}
     </div>
   )
